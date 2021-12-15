@@ -5,7 +5,7 @@ import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dao.impl.UserDAOImpl;
 import by.overone.bibliophile.dto.UserGetAllDTO;
-import by.overone.bibliophile.dto.UserRoleGetDTO;
+import by.overone.bibliophile.model.Status;
 import by.overone.bibliophile.model.User;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
         try {
             List<User> users = userDAO.getAllUser();
             userGetAllDTOS = users.stream()
-                    .map(user -> new UserGetAllDTO(user.getUserId(), user.getUserLogin(), user.getUserEmail(), user.getUserRole()))
+                    .map(user -> new UserGetAllDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(), user.getStatus()))
                     .collect(Collectors.toList());
         } catch (DAOException e) {
             throw new ServiceException();
@@ -31,16 +31,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRoleGetDTO> getRoleUsers() throws ServiceException {
-        List<UserRoleGetDTO> userRoleGetDTOS;
+    public List<UserGetAllDTO> getUsersByStatus() throws ServiceException {
+        List<UserGetAllDTO> userGetAllDTOS;
         try {
-            List<User> users = userDAO.getRoleUser();
-            userRoleGetDTOS = users.stream()
-                    .map(user -> new UserRoleGetDTO(user.getUserId(), user.getUserLogin(), user.getUserEmail(), user.getUserRole()))
+            List<User> users = userDAO.getUsersByStatus(Status.INACTIVE);
+            userGetAllDTOS = users.stream()
+                    .map(user -> new UserGetAllDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(), user.getStatus()))
                     .collect(Collectors.toList());
         } catch (DAOException e) {
-            throw new ServiceException();
+            throw new ServiceException("not connection", e);
         }
-        return userRoleGetDTOS;
+        return userGetAllDTOS;
     }
 }
+
+

@@ -2,7 +2,6 @@ package by.overone.bibliophile;
 
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dto.UserGetAllDTO;
-import by.overone.bibliophile.dto.UserRoleGetDTO;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.impl.UserServiceImpl;
@@ -21,12 +20,13 @@ public class Main {
   1) Покупатели (customers); 2) Продавцы (employee); 3) Книги (books); 4) Заказы (orders).
 
 Задачи программы:
- 1) Вывести всех продавцов;
- 2) Вывести всех покупателей;
- 3) Вывести по ID покупателей и продавцов;
- 4) Получить общий список книг по жанру;
- 5) Получить общий список книг по названию;
- 6) Регистрация покупателей.
+ 1) Вывести всех покуптелей; +
+ 2) Вывести всех покупателей по статусу; +
+ 3) Вывести по ID покупателей;
+ 4) Добавить пользователя (регистрация);
+ 5) Добавить детали пользователя;
+ 6) Обновить пользователя;
+ 7) Удалить пользователя;
      */
 
     public static void main(String[] args) throws DAONotFoundException, ServiceException {
@@ -34,12 +34,11 @@ public class Main {
         UserService userService = new UserServiceImpl();
 
         // GET_ALL_USERS
-        List<UserGetAllDTO> userGetAllDTOS = userService.getAllUsers();
-        userGetAllDTOS.forEach(System.out::println);
+//        List<UserGetAllDTO> userGetAllDTOS = userService.getAllUsers();
+//        userGetAllDTOS.forEach(System.out::println);
 
         // GET_ROLE_USERS
-//        List<UserRoleGetDTO> userRoleGetDTOS = userService.getRoleUsers();
-//        userRoleGetDTOS.forEach(System.out::println);
-
+        List<UserGetAllDTO> userGetAllDTOS = userService.getUsersByStatus();
+        userGetAllDTOS.forEach(System.out::println);
     }
 }

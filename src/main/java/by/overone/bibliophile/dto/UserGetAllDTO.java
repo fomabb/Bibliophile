@@ -1,6 +1,7 @@
 package by.overone.bibliophile.dto;
 
 import by.overone.bibliophile.model.Role;
+import by.overone.bibliophile.model.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserGetAllDTO {
-    private long userIdDTO;
-    private String userLoginDTO;
-    private String userEmailDTO;
-    private Role userRoleDTO;
+    private long id;
+    private String login;
+    private String email;
+    private Role role;
+    private Status status;
 }

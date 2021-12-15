@@ -4,6 +4,7 @@ import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.model.Role;
+import by.overone.bibliophile.model.Status;
 import by.overone.bibliophile.model.User;
 import by.overone.bibliophile.util.constant.UserConstant;
 
@@ -15,6 +16,7 @@ import java.util.Locale;
 public class UserDAOImpl implements UserDAO {
 
     private final static String GET_ALL_USER_SQL = "SELECT * FROM users";
+    private final static String GET_USER_BY_STATUS_SQL = "SELECT * FROM users WHERE user_status = ?";
     private final static String GET_ROLE_USER_SQL = "???";
     private final static String GET_ALL_BOOKS_SQL = "SELECT * FROM books WHERE ";
 
@@ -44,11 +46,12 @@ public class UserDAOImpl implements UserDAO {
 
             while (resultSet.next()) {
                 user = new User();
-                user.setUserId(resultSet.getLong(UserConstant.ID));
-                user.setUserLogin(resultSet.getString(UserConstant.LOGIN));
-                user.setUserPassword(resultSet.getString(UserConstant.PASSWORD));
-                user.setUserEmail(resultSet.getString(UserConstant.EMAIL));
-                user.setUserRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
+                user.setId(resultSet.getLong(UserConstant.ID));
+                user.setLogin(resultSet.getString(UserConstant.LOGIN));
+                user.setPassword(resultSet.getString(UserConstant.PASSWORD));
+                user.setEmail(resultSet.getString(UserConstant.EMAIL));
+                user.setRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
+                user.setStatus(Status.valueOf(resultSet.getString(UserConstant.STATUS).toUpperCase(Locale.ROOT)));
                 users.add(user);
             }
             preparedStatement.close();
@@ -66,25 +69,23 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getRoleUser() throws DAOException {
+    public List<User> getUsersByStatus(Status status) throws DAOException {
         List<User> users = new ArrayList<>();
-        User user = new User();
+        User user;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_ROLE_USER_SQL);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_STATUS_SQL);
+            preparedStatement.setString(1, status.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next() && resultSet.equals(getRoleUser())) {
-
-                while (resultSet.next()) {
-                    user.setUserId(resultSet.getLong(UserConstant.ID));
-                    user.setUserLogin(resultSet.getString(UserConstant.LOGIN));
-                    user.setUserPassword(resultSet.getString(UserConstant.PASSWORD));
-                    user.setUserEmail(resultSet.getString(UserConstant.EMAIL));
-                    user.setUserRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
-                    users.add(user);
-                }
-            } else {
-                throw new DAOException("Not found");
+            while (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getLong(UserConstant.ID));
+                user.setLogin(resultSet.getString(UserConstant.LOGIN));
+                user.setPassword(resultSet.getString(UserConstant.PASSWORD));
+                user.setEmail(resultSet.getString(UserConstant.EMAIL));
+                user.setRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
+                user.setStatus(Status.valueOf(resultSet.getString(UserConstant.STATUS).toUpperCase(Locale.ROOT)));
+                users.add(user);
             }
         } catch (SQLException e) {
             throw new DAOException("not found");
