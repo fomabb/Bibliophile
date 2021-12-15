@@ -1,5 +1,13 @@
 package by.overone.bibliophile;
 
+import by.overone.bibliophile.dao.exception.DAONotFoundException;
+import by.overone.bibliophile.dto.UserGetAllDTO;
+import by.overone.bibliophile.service.UserService;
+import by.overone.bibliophile.service.exception.ServiceException;
+import by.overone.bibliophile.service.impl.UserServiceImpl;
+
+import java.util.List;
+
 public class Main {
 
     /*
@@ -20,7 +28,13 @@ public class Main {
  6) Регистрация покупателей.
      */
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws DAONotFoundException, ServiceException {
+
+        UserService userService = new UserServiceImpl();
+
+        // GET_ALL_USERS
+        List<UserGetAllDTO> userGetAllDTOS = userService.getAllUsers();
+        userGetAllDTOS.forEach(System.out::println);
 
     }
 }
