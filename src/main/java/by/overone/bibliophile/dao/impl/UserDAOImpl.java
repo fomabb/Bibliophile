@@ -15,6 +15,8 @@ import java.util.Locale;
 public class UserDAOImpl implements UserDAO {
 
     private final static String GET_ALL_USER_SQL = "SELECT * FROM users";
+    private final static String GET_ROLE_USER_SQL = "???";
+    private final static String GET_ALL_BOOKS_SQL = "SELECT * FROM books WHERE ";
 
     String url = "jdbc:mysql://localhost:3306/bibliophile";
     String dbUser = "root";
@@ -34,13 +36,9 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getAllUser() throws DAOException, DAONotFoundException {
         List<User> users;
         User user;
-        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(GET_ALL_USER_SQL);
-        } catch (SQLException e) {
-            throw new DAOException("Not connect");
-        }
-        try {
             ResultSet resultSet = preparedStatement.executeQuery();
             users = new ArrayList<>();
 
@@ -53,16 +51,50 @@ public class UserDAOImpl implements UserDAO {
                 user.setUserRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
                 users.add(user);
             }
+            preparedStatement.close();
+            resultSet.close();
         } catch (SQLException e) {
-           throw new DAONotFoundException("Not users");
+            throw new DAOException("Not found");
         } finally {
             try {
                 connection.close();
             } catch (SQLException e) {
-                System.out.println("Error: [" + e + "]");
+                System.out.println("not connection");
             }
         }
+        return users;
+    }
 
+    @Override
+    public List<User> getRoleUser() throws DAOException {
+        List<User> users = new ArrayList<>();
+        User user = new User();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_ROLE_USER_SQL);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next() && resultSet.equals(getRoleUser())) {
+
+                while (resultSet.next()) {
+                    user.setUserId(resultSet.getLong(UserConstant.ID));
+                    user.setUserLogin(resultSet.getString(UserConstant.LOGIN));
+                    user.setUserPassword(resultSet.getString(UserConstant.PASSWORD));
+                    user.setUserEmail(resultSet.getString(UserConstant.EMAIL));
+                    user.setUserRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
+                    users.add(user);
+                }
+            } else {
+                throw new DAOException("Not found");
+            }
+        } catch (SQLException e) {
+            throw new DAOException("not found");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                System.out.println("not connection");
+            }
+        }
         return users;
     }
 }

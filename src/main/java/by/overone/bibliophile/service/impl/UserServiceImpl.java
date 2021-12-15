@@ -5,6 +5,7 @@ import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dao.impl.UserDAOImpl;
 import by.overone.bibliophile.dto.UserGetAllDTO;
+import by.overone.bibliophile.dto.UserRoleGetDTO;
 import by.overone.bibliophile.model.User;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
@@ -27,5 +28,19 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException();
         }
         return userGetAllDTOS;
+    }
+
+    @Override
+    public List<UserRoleGetDTO> getRoleUsers() throws ServiceException {
+        List<UserRoleGetDTO> userRoleGetDTOS;
+        try {
+            List<User> users = userDAO.getRoleUser();
+            userRoleGetDTOS = users.stream()
+                    .map(user -> new UserRoleGetDTO(user.getUserId(), user.getUserLogin(), user.getUserEmail(), user.getUserRole()))
+                    .collect(Collectors.toList());
+        } catch (DAOException e) {
+            throw new ServiceException();
+        }
+        return userRoleGetDTOS;
     }
 }

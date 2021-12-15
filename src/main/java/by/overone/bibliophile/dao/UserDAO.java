@@ -9,4 +9,6 @@ import java.util.List;
 public interface UserDAO {
 
     List<User> getAllUser() throws DAOException, DAONotFoundException;
+
+    List<User> getRoleUser() throws DAOException;
 }

@@ -2,6 +2,7 @@ package by.overone.bibliophile;
 
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dto.UserGetAllDTO;
+import by.overone.bibliophile.dto.UserRoleGetDTO;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.impl.UserServiceImpl;
@@ -35,6 +36,10 @@ public class Main {
         // GET_ALL_USERS
         List<UserGetAllDTO> userGetAllDTOS = userService.getAllUsers();
         userGetAllDTOS.forEach(System.out::println);
+
+        // GET_ROLE_USERS
+//        List<UserRoleGetDTO> userRoleGetDTOS = userService.getRoleUsers();
+//        userRoleGetDTOS.forEach(System.out::println);
 
     }
 }
