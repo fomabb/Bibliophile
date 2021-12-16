@@ -12,4 +12,6 @@ public interface UserDAO {
     List<User> getAllUser() throws DAOException, DAONotFoundException;
 
     List<User> getUsersByStatus(Status status) throws DAOException;
+
+    User getUserById(long id) throws DAONotFoundException, DAOException;
 }

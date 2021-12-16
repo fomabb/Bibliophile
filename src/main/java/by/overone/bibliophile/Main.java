@@ -37,8 +37,12 @@ public class Main {
 //        List<UserGetAllDTO> userGetAllDTOS = userService.getAllUsers();
 //        userGetAllDTOS.forEach(System.out::println);
 
-        // GET_ROLE_USERS
+        // GET_USER_BY_STATUS
         List<UserGetAllDTO> userGetAllDTOS = userService.getUsersByStatus();
         userGetAllDTOS.forEach(System.out::println);
+
+        // GET_USER_BY_ID
+//        UserGetAllDTO userGetAllDTO = userService.getUserById(2);
+//        System.out.println(userGetAllDTO);
     }
 }

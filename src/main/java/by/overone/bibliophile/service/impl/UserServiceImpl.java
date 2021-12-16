@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     public List<UserGetAllDTO> getUsersByStatus() throws ServiceException {
         List<UserGetAllDTO> userGetAllDTOS;
         try {
-            List<User> users = userDAO.getUsersByStatus(Status.INACTIVE);
+            List<User> users = userDAO.getUsersByStatus(Status.ACTIVE);
             userGetAllDTOS = users.stream()
                     .map(user -> new UserGetAllDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(), user.getStatus()))
                     .collect(Collectors.toList());
@@ -42,6 +42,24 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("not connection", e);
         }
         return userGetAllDTOS;
+    }
+
+    @Override
+    public UserGetAllDTO getUserById(long id) throws ServiceException {
+        UserGetAllDTO userGetAllDTO = new UserGetAllDTO();
+        try {
+            User user = userDAO.getUserById(id);
+            user.setId(user.getId());
+            user.setLogin(user.getLogin());
+            user.setEmail(user.getEmail());
+            user.setRole(user.getRole());
+            user.setStatus(user.getStatus());
+        } catch (DAOException e) {
+            throw new ServiceException("not connection");
+        } catch (DAONotFoundException e ) {
+            throw new ServiceException("User with id " +id+ " not found", e);
+        }
+        return userGetAllDTO;
     }
 }
 

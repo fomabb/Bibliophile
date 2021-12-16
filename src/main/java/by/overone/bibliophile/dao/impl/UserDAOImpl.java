@@ -17,7 +17,7 @@ public class UserDAOImpl implements UserDAO {
 
     private final static String GET_ALL_USER_SQL = "SELECT * FROM users";
     private final static String GET_USER_BY_STATUS_SQL = "SELECT * FROM users WHERE user_status = ?";
-    private final static String GET_ROLE_USER_SQL = "???";
+    private final static String GET_USER_BY_ID_SQL = "SELECT * FROM users WHERE user_id = ?";
     private final static String GET_ALL_BOOKS_SQL = "SELECT * FROM books WHERE ";
 
     String url = "jdbc:mysql://localhost:3306/bibliophile";
@@ -97,5 +97,36 @@ public class UserDAOImpl implements UserDAO {
             }
         }
         return users;
+    }
+
+    @Override
+    public User getUserById(long id) throws DAONotFoundException, DAOException {
+        User user;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_ID_SQL);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            user = new User();
+
+            if (resultSet.next()) {
+                user.setId(resultSet.getLong(UserConstant.ID));
+                user.setLogin(resultSet.getString(UserConstant.LOGIN));
+                user.setPassword(resultSet.getString(UserConstant.PASSWORD));
+                user.setEmail(resultSet.getString(UserConstant.EMAIL));
+                user.setRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
+                user.setStatus(Status.valueOf(resultSet.getString(UserConstant.STATUS).toUpperCase(Locale.ROOT)));
+            } else {
+                throw new DAONotFoundException("not users");
+            }
+        } catch (SQLException e) {
+            throw new DAOException("not connect");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
     }
 }

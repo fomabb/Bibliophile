@@ -11,4 +11,6 @@ public interface UserService {
     List<UserGetAllDTO> getAllUsers() throws ServiceException, DAONotFoundException;
 
     List<UserGetAllDTO> getUsersByStatus() throws ServiceException;
+
+    UserGetAllDTO getUserById(long id) throws ServiceException;
 }
