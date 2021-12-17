@@ -1,6 +1,8 @@
 package by.overone.bibliophile.util.validation;
 
+import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
+import by.overone.bibliophile.util.validation.exception.ValidateException;
 
 public class UserValidate {
 
@@ -12,9 +14,8 @@ public class UserValidate {
     private final static String ADDRESS_REGEX = "^[\\w]{5,50}$";
 
 
-
     private static boolean validateLogin(String login) {
-       return login != null && !login.isBlank() && login.matches(LOGIN_REGEX);
+        return login != null && !login.isBlank() && login.matches(LOGIN_REGEX);
     }
 
     private static boolean validatePassword(String password) {
@@ -35,5 +36,23 @@ public class UserValidate {
 
     private static boolean validateAddress(String address) {
         return address != null && !address.isBlank() && address.matches(ADDRESS_REGEX);
+    }
+
+    public static boolean validateUserRegistration(UserRegistrationDTO user) throws ValidateException {
+        if (validateLogin(user.getLogin()) && validatePassword(user.getPassword()) && validateEmail(user.getEmail())) {
+            return validateLogin(user.getLogin()) && validatePassword(user.getPassword()) && validateEmail(user.getEmail());
+        } else {
+            throw new ValidateException("Incorrect data entry");
+        }
+    }
+
+    public static boolean validateUserDetails(UserDetailsDTO user) throws ValidateException {
+        if (validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress())
+                && validatePhoneNumber(user.getPhoneNumber())) {
+return validateName(user.getName()) && validateName(user.getSurname()) && validateAddress(user.getAddress())
+        && validatePhoneNumber(user.getPhoneNumber());
+        } else {
+            throw new ValidateException("Incorrect data entry");
+        }
     }
 }

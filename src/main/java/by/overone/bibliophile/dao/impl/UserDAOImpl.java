@@ -3,6 +3,7 @@ package by.overone.bibliophile.dao.impl;
 import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
+import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
 import by.overone.bibliophile.model.Role;
 import by.overone.bibliophile.model.Status;
@@ -21,6 +22,7 @@ public class UserDAOImpl implements UserDAO {
     private final static String GET_USER_BY_ID_SQL = "SELECT * FROM users WHERE user_id = ?";
     private final static String REGISTRATION_USER_SQL = "INSERT INTO users VALUE(0, ?, ?, ?, ?, ?)";
     private final static String ADD_USER_DETAILS_ID_SQL = "INSERT INTO user_details(users_user_id) VALUE(?)";
+    private final static String ADD_USER_DETAILS_SQL = "UPDATE user_details SET user_details_name=?, ";
     private final static String GET_ALL_BOOKS_SQL = "SELECT * FROM books WHERE ";
 
     String url = "jdbc:mysql://localhost:3306/bibliophile";
@@ -156,7 +158,28 @@ public class UserDAOImpl implements UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return user;
+    }
+
+    @Override
+    public UserDetailsDTO addUserDerails(long id, UserDetailsDTO userDetailsDTO) throws DAOException {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_DETAILS_SQL);
+            preparedStatement.setString(1, userDetailsDTO.getName());
+            preparedStatement.setString(2, userDetailsDTO.getSurname());
+            preparedStatement.setString(3, userDetailsDTO.getAddress());
+            preparedStatement.setString(4, userDetailsDTO.getPhoneNumber());
+            preparedStatement.setLong(5, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("not connection");
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

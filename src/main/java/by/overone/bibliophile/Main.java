@@ -2,6 +2,9 @@ package by.overone.bibliophile;
 
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dto.UserGetAllDTO;
+import by.overone.bibliophile.dto.UserRegistrationDTO;
+import by.overone.bibliophile.model.Role;
+import by.overone.bibliophile.model.Status;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.exception.ServiceNotFoundException;
@@ -43,7 +46,16 @@ public class Main {
 //        userGetAllDTOS.forEach(System.out::println);
 
         // GET_USER_BY_ID
-        UserGetAllDTO userGetAllDTO = userService.getUserById(1);
-        System.out.println(userGetAllDTO);
+//        UserGetAllDTO userGetAllDTO = userService.getUserById(1);
+//        System.out.println(userGetAllDTO);
+
+        //USER_REGISTRATION
+        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
+        userRegistrationDTO.setLogin("Oleg");
+        userRegistrationDTO.setPassword("private557");
+        userRegistrationDTO.setEmail("oligi@mail.com");
+        userRegistrationDTO.setRole(Role.CUSTOMERS);
+        userRegistrationDTO.setStatus(Status.ACTIVE);
+        userService.addUser(userRegistrationDTO);
     }
 }

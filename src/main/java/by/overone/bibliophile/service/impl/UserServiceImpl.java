@@ -4,6 +4,7 @@ import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dao.impl.UserDAOImpl;
+import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserGetAllDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
 import by.overone.bibliophile.model.Status;
@@ -11,6 +12,8 @@ import by.overone.bibliophile.model.User;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.exception.ServiceNotFoundException;
+import by.overone.bibliophile.util.validation.UserValidate;
+import by.overone.bibliophile.util.validation.exception.ValidateException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,12 +68,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addUser(UserRegistrationDTO user) {
+    public boolean addUser(UserRegistrationDTO userRegistrationDTO) throws ServiceException {
+        try {
+            UserValidate.validateUserRegistration(userRegistrationDTO);
+            userDAO.addUser(userRegistrationDTO);
+        } catch (ValidateException e) {
+            throw new ServiceException();
+        }
+        return true;
+    }
 
-
-
-
-        return false;
+    @Override
+    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException {
+        getUserById(id);
+        try {
+            UserValidate.validateUserDetails(userDetailsDTO);
+            userDAO.addUserDerails(id, userDetailsDTO);
+        } catch (ValidateException | DAOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
