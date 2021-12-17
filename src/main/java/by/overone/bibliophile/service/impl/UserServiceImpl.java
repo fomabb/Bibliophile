@@ -2,6 +2,7 @@ package by.overone.bibliophile.service.impl;
 
 import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
+import by.overone.bibliophile.dao.exception.DAOExistException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dao.impl.UserDAOImpl;
 import by.overone.bibliophile.dto.UserDetailsDTO;
@@ -54,11 +55,11 @@ public class UserServiceImpl implements UserService {
         UserGetAllDTO userGetAllDTO = new UserGetAllDTO();
         try {
             User user = userDAO.getUserById(id);
-            user.setId(user.getId());
-            user.setLogin(user.getLogin());
-            user.setEmail(user.getEmail());
-            user.setRole(user.getRole());
-            user.setStatus(user.getStatus());
+            userGetAllDTO.setId(user.getId());
+            userGetAllDTO.setLogin(user.getLogin());
+            userGetAllDTO.setEmail(user.getEmail());
+            userGetAllDTO.setRole(user.getRole());
+            userGetAllDTO.setStatus(user.getStatus());
         } catch (DAOException e) {
             throw new ServiceException("not connection");
         } catch (DAONotFoundException e) {
@@ -72,8 +73,8 @@ public class UserServiceImpl implements UserService {
         try {
             UserValidate.validateUserRegistration(userRegistrationDTO);
             userDAO.addUser(userRegistrationDTO);
-        } catch (ValidateException e) {
-            throw new ServiceException();
+        } catch (ValidateException | DAOExistException | DAOException e) { // Ошибка, нет соединения!!!!!!!!!!!!!!!!!!!
+            throw new ServiceException("not connection");
         }
         return true;
     }
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
         try {
             UserValidate.validateUserDetails(userDetailsDTO);
             userDAO.addUserDerails(id, userDetailsDTO);
-        } catch (ValidateException | DAOException e) {
+        } catch (ValidateException | DAOException e) { // неправельный ввод данных!!!
             e.printStackTrace();
         }
     }

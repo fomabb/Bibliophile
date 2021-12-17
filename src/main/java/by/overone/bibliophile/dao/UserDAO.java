@@ -1,6 +1,7 @@
 package by.overone.bibliophile.dao;
 
 import by.overone.bibliophile.dao.exception.DAOException;
+import by.overone.bibliophile.dao.exception.DAOExistException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
@@ -17,7 +18,7 @@ public interface UserDAO {
 
     User getUserById(long id) throws DAONotFoundException, DAOException;
 
-    UserRegistrationDTO addUser(UserRegistrationDTO user);
+    UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOExistException, DAOException;
 
     UserDetailsDTO addUserDerails(long id, UserDetailsDTO userDetailsDTO) throws DAOException;
 }

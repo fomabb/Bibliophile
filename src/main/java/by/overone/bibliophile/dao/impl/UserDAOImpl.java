@@ -2,6 +2,7 @@ package by.overone.bibliophile.dao.impl;
 
 import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
+import by.overone.bibliophile.dao.exception.DAOExistException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
@@ -92,6 +93,8 @@ public class UserDAOImpl implements UserDAO {
                 user.setStatus(Status.valueOf(resultSet.getString(UserConstant.STATUS).toUpperCase(Locale.ROOT)));
                 users.add(user);
             }
+            preparedStatement.close();
+            resultSet.close();
         } catch (SQLException e) {
             throw new DAOException("not found");
         } finally {
@@ -123,6 +126,8 @@ public class UserDAOImpl implements UserDAO {
             } else {
                 throw new DAONotFoundException("not users");
             }
+            preparedStatement.close();
+            resultSet.close();
         } catch (SQLException e) {
             throw new DAOException("not connect");
         } finally {
@@ -136,7 +141,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public UserRegistrationDTO addUser(UserRegistrationDTO user) {
+    public UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOExistException, DAOException {
         try {
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(REGISTRATION_USER_SQL, Statement.RETURN_GENERATED_KEYS);
@@ -155,8 +160,21 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setLong(1, user.getId());
             preparedStatement.executeUpdate();
             connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            throw new DAOExistException("Duplicate user", ex);
+        } catch (SQLException e) { // поле user_details_name не имеет значения по умолчанию!!!!!!
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            throw new DAOException("not connection");
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return user;
     }
@@ -173,13 +191,13 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("not connection");
-        }finally {
+        } finally {
             try {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return null;
+        return userDetailsDTO;
     }
 }
