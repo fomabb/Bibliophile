@@ -5,10 +5,12 @@ import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dao.impl.UserDAOImpl;
 import by.overone.bibliophile.dto.UserGetAllDTO;
+import by.overone.bibliophile.dto.UserRegistrationDTO;
 import by.overone.bibliophile.model.Status;
 import by.overone.bibliophile.model.User;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
+import by.overone.bibliophile.service.exception.ServiceNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserGetAllDTO getUserById(long id) throws ServiceException {
+    public UserGetAllDTO getUserById(long id) throws ServiceException, ServiceNotFoundException {
         UserGetAllDTO userGetAllDTO = new UserGetAllDTO();
         try {
             User user = userDAO.getUserById(id);
@@ -56,10 +58,19 @@ public class UserServiceImpl implements UserService {
             user.setStatus(user.getStatus());
         } catch (DAOException e) {
             throw new ServiceException("not connection");
-        } catch (DAONotFoundException e ) {
-            throw new ServiceException("User with id " +id+ " not found", e);
+        } catch (DAONotFoundException e) {
+            throw new ServiceNotFoundException("User with id " + id + " not found", e);
         }
         return userGetAllDTO;
+    }
+
+    @Override
+    public boolean addUser(UserRegistrationDTO user) {
+
+
+
+
+        return false;
     }
 }
 

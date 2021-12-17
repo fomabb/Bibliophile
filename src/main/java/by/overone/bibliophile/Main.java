@@ -4,6 +4,7 @@ import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dto.UserGetAllDTO;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
+import by.overone.bibliophile.service.exception.ServiceNotFoundException;
 import by.overone.bibliophile.service.impl.UserServiceImpl;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class Main {
  7) Удалить пользователя;
      */
 
-    public static void main(String[] args) throws DAONotFoundException, ServiceException {
+    public static void main(String[] args) throws DAONotFoundException, ServiceException, ServiceNotFoundException {
 
         UserService userService = new UserServiceImpl();
 
@@ -38,11 +39,11 @@ public class Main {
 //        userGetAllDTOS.forEach(System.out::println);
 
         // GET_USER_BY_STATUS
-        List<UserGetAllDTO> userGetAllDTOS = userService.getUsersByStatus();
-        userGetAllDTOS.forEach(System.out::println);
+//        List<UserGetAllDTO> userGetAllDTOS = userService.getUsersByStatus();
+//        userGetAllDTOS.forEach(System.out::println);
 
         // GET_USER_BY_ID
-//        UserGetAllDTO userGetAllDTO = userService.getUserById(2);
-//        System.out.println(userGetAllDTO);
+        UserGetAllDTO userGetAllDTO = userService.getUserById(1);
+        System.out.println(userGetAllDTO);
     }
 }
