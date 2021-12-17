@@ -7,8 +7,8 @@ import by.overone.bibliophile.util.validation.exception.ValidateException;
 public class UserValidate {
 
     private final static String LOGIN_REGEX = "^[\\w]{4,12}$";
-    private final static String EMAIL_REGEX = "^[\\S]+@[\\w]+\\.[\\a-z]+$";
-    private final static String PASSWORD_REGEX = "^[\\w]{8,16}$";
+    private final static String EMAIL_REGEX = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$";
+    private final static String PASSWORD_REGEX = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}";
     private final static String PHONE_REGEX = "^(\\+375|80)(17|29|33|44)(\\d){7}$";
     private final static String NAME_REGEX = "^[a-zA-Z]{2,30}$";
     private final static String ADDRESS_REGEX = "^[\\w]{5,50}$";

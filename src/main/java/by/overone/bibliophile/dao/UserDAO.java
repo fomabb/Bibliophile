@@ -21,4 +21,6 @@ public interface UserDAO {
     UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOExistException, DAOException;
 
     UserDetailsDTO addUserDerails(long id, UserDetailsDTO userDetailsDTO) throws DAOException;
+
+    boolean deleteUser(long id) throws DAONotFoundException;
 }

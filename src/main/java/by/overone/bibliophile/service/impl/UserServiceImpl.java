@@ -28,7 +28,8 @@ public class UserServiceImpl implements UserService {
         try {
             List<User> users = userDAO.getAllUser();
             userGetAllDTOS = users.stream()
-                    .map(user -> new UserGetAllDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(), user.getStatus()))
+                    .map(user -> new UserGetAllDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(),
+                            user.getStatus()))
                     .collect(Collectors.toList());
         } catch (DAOException e) {
             throw new ServiceException();
@@ -42,7 +43,8 @@ public class UserServiceImpl implements UserService {
         try {
             List<User> users = userDAO.getUsersByStatus(Status.ACTIVE);
             userGetAllDTOS = users.stream()
-                    .map(user -> new UserGetAllDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(), user.getStatus()))
+                    .map(user -> new UserGetAllDTO(user.getId(), user.getLogin(), user.getEmail(), user.getRole(),
+                            user.getStatus()))
                     .collect(Collectors.toList());
         } catch (DAOException e) {
             throw new ServiceException("not connection", e);
@@ -80,13 +82,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException {
+    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException,
+            ServiceNotFoundException {
+
         getUserById(id);
+
         try {
             UserValidate.validateUserDetails(userDetailsDTO);
             userDAO.addUserDerails(id, userDetailsDTO);
         } catch (ValidateException | DAOException e) { // неправельный ввод данных!!!
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteUser(long id) throws ServiceException, ServiceNotFoundException {
+        getUserById(id);
+        try {
+            userDAO.deleteUser(id);
+        } catch (DAONotFoundException e) {
+            throw new ServiceNotFoundException("not users");
         }
     }
 }

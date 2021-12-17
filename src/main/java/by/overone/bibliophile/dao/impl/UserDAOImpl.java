@@ -24,6 +24,7 @@ public class UserDAOImpl implements UserDAO {
     private final static String REGISTRATION_USER_SQL = "INSERT INTO users VALUE(0, ?, ?, ?, ?, ?)";
     private final static String ADD_USER_DETAILS_ID_SQL = "INSERT INTO user_details(users_user_id) VALUE(?)";
     private final static String ADD_USER_DETAILS_SQL = "UPDATE user_details SET user_details_name=?, ";
+    private final static String DELETE_USER_SQL = "UPDATE users SET status=? WHERE user_id=?";
     private final static String GET_ALL_BOOKS_SQL = "SELECT * FROM books WHERE ";
 
     String url = "jdbc:mysql://localhost:3306/bibliophile";
@@ -199,5 +200,18 @@ public class UserDAOImpl implements UserDAO {
             }
         }
         return userDetailsDTO;
+    }
+
+    @Override
+    public boolean deleteUser(long id) throws DAONotFoundException {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_SQL);
+            preparedStatement.setString(1, Status.INACTIVE.toString());
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+           throw new DAONotFoundException("[failed to delete]");
+        }
+        return true;
     }
 }

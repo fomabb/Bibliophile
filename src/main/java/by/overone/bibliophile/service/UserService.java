@@ -20,4 +20,6 @@ public interface UserService {
     boolean addUser(UserRegistrationDTO user) throws ServiceException;
 
     void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException;
+
+    void deleteUser(long id) throws ServiceException, ServiceNotFoundException;
 }
