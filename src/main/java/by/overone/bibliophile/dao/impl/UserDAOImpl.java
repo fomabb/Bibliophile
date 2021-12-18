@@ -4,6 +4,7 @@ import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAOExistException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
+import by.overone.bibliophile.dto.UserDataDTO;
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
 import by.overone.bibliophile.model.Role;
@@ -142,7 +143,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public UserRegistrationDTO addUser(UserRegistrationDTO user) throws DAOExistException, DAOException {
+    public User addUser(User user) throws DAOException {
         try {
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(REGISTRATION_USER_SQL, Statement.RETURN_GENERATED_KEYS);
@@ -152,36 +153,38 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(4, Role.CUSTOMERS.toString());
             preparedStatement.setString(5, Status.ACTIVE.toString());
             preparedStatement.executeUpdate();
+
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
 
             while (resultSet.next()) {
                 user.setId(resultSet.getLong(1));
+                preparedStatement = connection.prepareStatement(ADD_USER_DETAILS_ID_SQL);
+                preparedStatement.setLong(1, user.getId());
+                preparedStatement.executeUpdate();
             }
-            preparedStatement = connection.prepareStatement(ADD_USER_DETAILS_ID_SQL);
-            preparedStatement.setLong(1, user.getId());
-            preparedStatement.executeUpdate();
             connection.commit();
-        } catch (SQLIntegrityConstraintViolationException ex) {
-            throw new DAOExistException("Duplicate user", ex);
-        } catch (SQLException e) { // поле user_details_name не имеет значения по умолчанию!!!!!!
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
             try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            throw new DAOException("not connection");
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                throw new DAOException("Error" , e);
+            } finally {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         return user;
     }
 
     @Override
-    public UserDetailsDTO addUserDerails(long id, UserDetailsDTO userDetailsDTO) throws DAOException {
+    public UserDetailsDTO addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws DAOException {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_DETAILS_SQL);
             preparedStatement.setString(1, userDetailsDTO.getName());
@@ -204,14 +207,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean deleteUser(long id) throws DAONotFoundException {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_SQL);
-            preparedStatement.setString(1, Status.INACTIVE.toString());
-            preparedStatement.setLong(2, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-           throw new DAONotFoundException("[failed to delete]");
-        }
-        return true;
+        return false;
     }
 }

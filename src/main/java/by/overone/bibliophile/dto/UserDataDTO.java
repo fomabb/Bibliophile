@@ -1,6 +1,5 @@
-package by.overone.bibliophile.model;
+package by.overone.bibliophile.dto;
 
-import by.overone.bibliophile.dto.UserDataDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,11 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends UserDataDTO {
+public class UserDataDTO {
     private long id;
     private String login;
-    private String password;
     private String email;
-    private Role role;
-    private Status status;
+    private String password;
 }

@@ -1,11 +1,13 @@
 package by.overone.bibliophile.service;
 
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
+import by.overone.bibliophile.dto.UserDataDTO;
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserGetAllDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
 import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.exception.ServiceNotFoundException;
+import by.overone.bibliophile.util.validation.exception.ValidateException;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public interface UserService {
 
     UserGetAllDTO getUserById(long id) throws ServiceException, ServiceNotFoundException;
 
-    boolean addUser(UserRegistrationDTO user) throws ServiceException;
+    UserDataDTO addUser(UserRegistrationDTO userRegistrationDTO) throws ValidateException, ServiceException;
 
     void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException;
 

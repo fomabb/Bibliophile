@@ -2,9 +2,9 @@ package by.overone.bibliophile.service.impl;
 
 import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
-import by.overone.bibliophile.dao.exception.DAOExistException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dao.impl.UserDAOImpl;
+import by.overone.bibliophile.dto.UserDataDTO;
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserGetAllDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
@@ -15,6 +15,7 @@ import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.exception.ServiceNotFoundException;
 import by.overone.bibliophile.util.validation.UserValidate;
 import by.overone.bibliophile.util.validation.exception.ValidateException;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,29 +72,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addUser(UserRegistrationDTO userRegistrationDTO) throws ServiceException {
-        try {
-            UserValidate.validateUserRegistration(userRegistrationDTO);
-            userDAO.addUser(userRegistrationDTO);
-        } catch (ValidateException | DAOExistException | DAOException e) { // Ошибка, нет соединения!!!!!!!!!!!!!!!!!!!
-            throw new ServiceException("not connection");
+    public UserDataDTO addUser(UserRegistrationDTO userRegistrationDTO) throws ValidateException, ServiceException {
+        User user = new User();
+        user.setLogin(userRegistrationDTO.getLogin());
+        user.setEmail(userRegistrationDTO.getEmail());
+        user.setPassword(DigestUtils.md5Hex(userRegistrationDTO.getPassword()));
+//        user.setPassword(userRegistrationDTO.getPassword());
+        if (!UserValidate.validateRegistration(userRegistrationDTO)) {
+            throw new ValidateException("not registration");
         }
-        return true;
+        try {
+            user = userDAO.addUser(user);
+        } catch (DAOException e) {
+            throw new ServiceException("not add", e);
+        }
+
+        return new UserDataDTO(0, user.getLogin(), user.getPassword(), user.getEmail());
     }
 
     @Override
-    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException,
-            ServiceNotFoundException {
+    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException {
 
-        getUserById(id);
-
-        try {
-            UserValidate.validateUserDetails(userDetailsDTO);
-            userDAO.addUserDerails(id, userDetailsDTO);
-        } catch (ValidateException | DAOException e) { // неправельный ввод данных!!!
-            e.printStackTrace();
-        }
     }
+
+//    @Override
+//    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException {
+//        ServiceNotFoundException {
+//
+//            getUserById(id);
+//
+//            try {
+//                UserValidate.validateUserDetails(userDetailsDTO);
+//                userDAO.addUserDetails(id, userDetailsDTO);
+//            } catch (ValidateException | DAOException e) { // неправельный ввод данных!!!
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
 
     @Override
     public void deleteUser(long id) throws ServiceException, ServiceNotFoundException {
