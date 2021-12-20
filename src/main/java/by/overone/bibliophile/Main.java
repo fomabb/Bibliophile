@@ -1,14 +1,18 @@
 package by.overone.bibliophile;
 
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
+import by.overone.bibliophile.dto.BookDataDTO;
 import by.overone.bibliophile.dto.UserAllInfoDTO;
+import by.overone.bibliophile.service.BooksService;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.exception.ServiceNotFoundException;
+import by.overone.bibliophile.service.impl.BooksServiceImpl;
 import by.overone.bibliophile.service.impl.UserServiceImpl;
 import by.overone.bibliophile.util.validation.exception.ValidateException;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
 
@@ -34,6 +38,7 @@ public class Main {
     public static void main(String[] args) throws DAONotFoundException, ServiceException, ServiceNotFoundException, ValidateException, SQLException {
 
         UserService userService = new UserServiceImpl();
+        BooksService booksService = new BooksServiceImpl();
 
         // GET_ALL_USERS
 //        List<UserGetAllDTO> userGetAllDTOS = userService.getAllUsers();
@@ -67,10 +72,14 @@ public class Main {
 //        System.out.println(userDetailsDTO);
 
         // GET_ALL_INFO
-        UserAllInfoDTO userGetAllDTO = userService.getUserAllInfo(24);
-        System.out.println(userGetAllDTO);
+//        UserAllInfoDTO userGetAllDTO = userService.getUserAllInfo(24);
+//        System.out.println(userGetAllDTO);
 
         // DELETE_USER
 //        userService.deleteUser(22);
+
+        // GET_ALL_BOOKS
+        List<BookDataDTO> bookDataDTOS = booksService.getAllBooks();
+        bookDataDTOS.forEach(System.out::println);
     }
 }
