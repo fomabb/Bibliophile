@@ -23,8 +23,11 @@ public class UserDAOImpl implements UserDAO {
     private final static String GET_USER_BY_STATUS_SQL = "SELECT * FROM users WHERE user_status = ?";
     private final static String GET_USER_BY_ID_SQL = "SELECT * FROM users WHERE user_id = ?";
     private final static String REGISTRATION_USER_SQL = "INSERT INTO users VALUE(0, ?, ?, ?, ?, ?)";
+    private final static String GET_USER_DETAILS_BY_ID = "SELECT * FROM user_details WHERE users_user_id = ?";
     private final static String ADD_USER_DETAILS_ID_SQL = "INSERT INTO user_details(users_user_id) VALUE(?)";
-    private final static String ADD_USER_DETAILS_SQL = "UPDATE user_details SET user_details_name=?, ";
+    private final static String UPDATE_USER_STATUS_SQL = "UPDATE user SET status =(?) WHERE id=(?)";
+    private final static String ADD_USER_DETAILS_SQL = "UPDATE user_details SET user_details_name=?, " +
+            "user_detail_surname=?, user_detail_address=?, user_detail_phone=? WHERE users_user_id=?";
     private final static String DELETE_USER_SQL = "UPDATE users SET status=? WHERE user_id=?";
     private final static String GET_ALL_BOOKS_SQL = "SELECT * FROM books WHERE ";
 
@@ -65,7 +68,7 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.close();
             resultSet.close();
         } catch (SQLException e) {
-            throw new DAOException("Not found");
+            throw new DAOException("Not found", e);
         } finally {
             try {
                 connection.close();
@@ -171,7 +174,7 @@ public class UserDAOImpl implements UserDAO {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-                throw new DAOException("Error" , e);
+                throw new DAOException("Error", e);
             } finally {
                 try {
                     connection.close();
@@ -184,29 +187,35 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public UserDetailsDTO addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws DAOException {
+    public UserDetailsDTO getUserDetails(long Userid) throws DAOException {
+        UserDetailsDTO userDetailsDTO;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_DETAILS_SQL);
-            preparedStatement.setString(1, userDetailsDTO.getName());
-            preparedStatement.setString(2, userDetailsDTO.getSurname());
-            preparedStatement.setString(3, userDetailsDTO.getAddress());
-            preparedStatement.setString(4, userDetailsDTO.getPhoneNumber());
-            preparedStatement.setLong(5, id);
-            preparedStatement.executeUpdate();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_DETAILS_BY_ID);
+            preparedStatement.setLong(1, Userid);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            userDetailsDTO = new UserDetailsDTO();
+            while (resultSet.next()) {
+                userDetailsDTO.setName(resultSet.getString(UserConstant.NAME));
+                userDetailsDTO.setSurname(resultSet.getString(UserConstant.SURNAME));
+                userDetailsDTO.setAddress(resultSet.getString(UserConstant.ADDRESS));
+                userDetailsDTO.setPhoneNumber(resultSet.getString(UserConstant.PHONE));
+            }
         } catch (SQLException e) {
             throw new DAOException("not connection");
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return userDetailsDTO;
     }
 
     @Override
     public boolean deleteUser(long id) throws DAONotFoundException {
-        return false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_SQL);
+            preparedStatement.setString(1, Status.INACTIVE.toString());
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAONotFoundException("Deletion was not successful", e);
+        }
+        return true;
     }
 }

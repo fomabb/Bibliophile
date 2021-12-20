@@ -12,6 +12,7 @@ import by.overone.bibliophile.service.exception.ServiceNotFoundException;
 import by.overone.bibliophile.service.impl.UserServiceImpl;
 import by.overone.bibliophile.util.validation.exception.ValidateException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
@@ -35,7 +36,7 @@ public class Main {
  7) Обновить пользователя;
      */
 
-    public static void main(String[] args) throws DAONotFoundException, ServiceException, ServiceNotFoundException, ValidateException {
+    public static void main(String[] args) throws DAONotFoundException, ServiceException, ServiceNotFoundException, ValidateException, SQLException {
 
         UserService userService = new UserServiceImpl();
 
@@ -48,24 +49,27 @@ public class Main {
 //        userGetAllDTOS.forEach(System.out::println);
 
         // GET_USER_BY_ID
-//        UserGetAllDTO userGetAllDTO = userService.getUserById(22);
+//        UserGetAllDTO userGetAllDTO = userService.getUserById(3);
 //        System.out.println(userGetAllDTO);
 
         //USER_REGISTRATION
-        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
-        userRegistrationDTO.setLogin("Marina");
-        userRegistrationDTO.setPassword("mar1234");
-        userRegistrationDTO.setEmail("mr@mail.com");
-        userService.addUser(userRegistrationDTO);
-
+//        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
+//        userRegistrationDTO.setLogin("Merlin");
+//        userRegistrationDTO.setPassword("loh888");
+//        userRegistrationDTO.setEmail("menson@gmail.com");
+//        userService.addUser(userRegistrationDTO);
 
         // ADD_USER_DETAILS
 //        UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
-//        userDetailsDTO.setName("Oleg");
-//        userDetailsDTO.setSurname("Veshiy");
-//        userDetailsDTO.setAddress("Brest");
+//        userDetailsDTO.setName("Valeria");
+//        userDetailsDTO.setSurname("Popko");
+//        userDetailsDTO.setAddress("Pinsk");
 //        userDetailsDTO.setPhoneNumber("+37529 555-66-22");
-//        userService.addUserDetails(4, userDetailsDTO);
+//        userService.addUserDetails(26, userDetailsDTO);
+
+        // GET_USER_DETAILS_BY_ID
+//        UserDetailsDTO userDetailsDTO = userService.getUserDetails(24);
+//        System.out.println(userDetailsDTO);
 
         // DELETE_USER
 //        userService.deleteUser(22);

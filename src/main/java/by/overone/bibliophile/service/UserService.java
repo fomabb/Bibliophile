@@ -9,6 +9,7 @@ import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.exception.ServiceNotFoundException;
 import by.overone.bibliophile.util.validation.exception.ValidateException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface UserService {
@@ -21,7 +22,7 @@ public interface UserService {
 
     UserDataDTO addUser(UserRegistrationDTO userRegistrationDTO) throws ValidateException, ServiceException;
 
-    void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException;
+    UserDetailsDTO getUserDetails(long userId) throws ServiceException;
 
     void deleteUser(long id) throws ServiceException, ServiceNotFoundException;
 }

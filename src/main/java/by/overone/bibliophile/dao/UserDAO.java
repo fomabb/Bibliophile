@@ -9,6 +9,7 @@ import by.overone.bibliophile.dto.UserRegistrationDTO;
 import by.overone.bibliophile.model.Status;
 import by.overone.bibliophile.model.User;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface UserDAO {
@@ -21,7 +22,7 @@ public interface UserDAO {
 
     User addUser(User user) throws DAOException;
 
-    UserDetailsDTO addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws DAOException;
+    UserDetailsDTO getUserDetails(long Userid) throws DAOException;
 
-    boolean deleteUser(long id) throws DAONotFoundException;
+    boolean deleteUser(long id) throws DAONotFoundException, DAOException;
 }

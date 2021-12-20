@@ -2,8 +2,6 @@ package by.overone.bibliophile.util.validation;
 
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
-import by.overone.bibliophile.model.User;
-import by.overone.bibliophile.util.validation.exception.ValidateException;
 
 public class UserValidate {
 
@@ -19,7 +17,8 @@ public class UserValidate {
     }
 
     public static boolean validateUserDetails(UserDetailsDTO user) {
-        return validateName(user.getName()) & validateSurname(user.getSurname()) && validateAddress(user.getAddress()) && validatePhoneNumber(user.getPhoneNumber());
+        return validateName(user.getName()) && validateSurname(user.getSurname()) && validateAddress(user.getAddress())
+                && validatePhoneNumber(user.getPhoneNumber());
     }
 
     private static boolean validateLogin(String login) {

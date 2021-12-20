@@ -17,6 +17,7 @@ import by.overone.bibliophile.util.validation.UserValidate;
 import by.overone.bibliophile.util.validation.exception.ValidateException;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
         user.setLogin(userRegistrationDTO.getLogin());
         user.setEmail(userRegistrationDTO.getEmail());
         user.setPassword(DigestUtils.md5Hex(userRegistrationDTO.getPassword()));
-//        user.setPassword(userRegistrationDTO.getPassword());
+
         if (!UserValidate.validateRegistration(userRegistrationDTO)) {
             throw new ValidateException("not registration");
         }
@@ -91,34 +92,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException {
-
+    public UserDetailsDTO getUserDetails(long userId) throws ServiceException {
+        UserDetailsDTO userDetailsDTO = null;
+        try {
+            userDetailsDTO = userDAO.getUserDetails(userId);
+        } catch (DAOException e) {
+            throw new ServiceException("Error" , e);
+        }
+        return userDetailsDTO;
     }
-
-//    @Override
-//    public void addUserDetails(long id, UserDetailsDTO userDetailsDTO) throws ServiceException, ServiceNotFoundException {
-//        ServiceNotFoundException {
-//
-//            getUserById(id);
-//
-//            try {
-//                UserValidate.validateUserDetails(userDetailsDTO);
-//                userDAO.addUserDetails(id, userDetailsDTO);
-//            } catch (ValidateException | DAOException e) { // неправельный ввод данных!!!
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
 
     @Override
     public void deleteUser(long id) throws ServiceException, ServiceNotFoundException {
-        getUserById(id);
-        try {
-            userDAO.deleteUser(id);
-        } catch (DAONotFoundException e) {
-            throw new ServiceNotFoundException("not users");
-        }
     }
 }
 
