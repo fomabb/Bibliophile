@@ -3,6 +3,7 @@ package by.overone.bibliophile.dao;
 import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAOExistException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
+import by.overone.bibliophile.dto.UserAllInfoDTO;
 import by.overone.bibliophile.dto.UserDataDTO;
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
@@ -22,7 +23,9 @@ public interface UserDAO {
 
     User addUser(User user) throws DAOException;
 
-    UserDetailsDTO getUserDetails(long Userid) throws DAOException;
+    UserDetailsDTO getUserDetails(long userId) throws DAOException;
+
+    UserAllInfoDTO getInfoUsers(long userId);
 
     boolean deleteUser(long id) throws DAONotFoundException, DAOException;
 }

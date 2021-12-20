@@ -4,6 +4,7 @@ import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAOExistException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
+import by.overone.bibliophile.dto.UserAllInfoDTO;
 import by.overone.bibliophile.dto.UserDataDTO;
 import by.overone.bibliophile.dto.UserDetailsDTO;
 import by.overone.bibliophile.dto.UserRegistrationDTO;
@@ -25,6 +26,7 @@ public class UserDAOImpl implements UserDAO {
     private final static String REGISTRATION_USER_SQL = "INSERT INTO users VALUE(0, ?, ?, ?, ?, ?)";
     private final static String GET_USER_DETAILS_BY_ID = "SELECT * FROM user_details WHERE users_user_id = ?";
     private final static String ADD_USER_DETAILS_ID_SQL = "INSERT INTO user_details(users_user_id) VALUE(?)";
+    private final static String GET_INFO_SQL = "SELECT * FROM users JOIN user_details ON user_id = users_user_id WHERE user_id = ?";
     private final static String UPDATE_USER_STATUS_SQL = "UPDATE user SET status =(?) WHERE id=(?)";
     private final static String ADD_USER_DETAILS_SQL = "UPDATE user_details SET user_details_name=?, " +
             "user_detail_surname=?, user_detail_address=?, user_detail_phone=? WHERE users_user_id=?";
@@ -187,11 +189,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public UserDetailsDTO getUserDetails(long Userid) throws DAOException {
+    public UserDetailsDTO getUserDetails(long userId) throws DAOException {
         UserDetailsDTO userDetailsDTO;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_DETAILS_BY_ID);
-            preparedStatement.setLong(1, Userid);
+            preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             userDetailsDTO = new UserDetailsDTO();
             while (resultSet.next()) {
@@ -202,9 +204,47 @@ public class UserDAOImpl implements UserDAO {
             }
         } catch (SQLException e) {
             throw new DAOException("not connection");
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return userDetailsDTO;
     }
+
+    @Override
+    public UserAllInfoDTO getInfoUsers(long userId) {
+        UserAllInfoDTO userAllInfoDTO = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_INFO_SQL);
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            userAllInfoDTO = new UserAllInfoDTO();
+            while (resultSet.next()) {
+                userAllInfoDTO.setLogin(resultSet.getString(UserConstant.LOGIN));
+                userAllInfoDTO.setPassword(resultSet.getString(UserConstant.PASSWORD));
+                userAllInfoDTO.setEmail(resultSet.getString(UserConstant.EMAIL));
+                userAllInfoDTO.setRole(Role.valueOf(resultSet.getString(UserConstant.ROLE).toUpperCase(Locale.ROOT)));
+                userAllInfoDTO.setStatus(Status.valueOf(resultSet.getString(UserConstant.STATUS).toUpperCase(Locale.ROOT)));
+                userAllInfoDTO.setName(resultSet.getString(UserConstant.NAME));
+                userAllInfoDTO.setSurName(resultSet.getString(UserConstant.SURNAME));
+                userAllInfoDTO.setAddress(resultSet.getString(UserConstant.ADDRESS));
+                userAllInfoDTO.setPhoneNumber(resultSet.getString(UserConstant.PHONE));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return userAllInfoDTO;
+    }
+
 
     @Override
     public boolean deleteUser(long id) throws DAONotFoundException {

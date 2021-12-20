@@ -1,11 +1,7 @@
 package by.overone.bibliophile;
 
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
-import by.overone.bibliophile.dto.UserDetailsDTO;
-import by.overone.bibliophile.dto.UserGetAllDTO;
-import by.overone.bibliophile.dto.UserRegistrationDTO;
-import by.overone.bibliophile.model.Role;
-import by.overone.bibliophile.model.Status;
+import by.overone.bibliophile.dto.UserAllInfoDTO;
 import by.overone.bibliophile.service.UserService;
 import by.overone.bibliophile.service.exception.ServiceException;
 import by.overone.bibliophile.service.exception.ServiceNotFoundException;
@@ -13,7 +9,6 @@ import by.overone.bibliophile.service.impl.UserServiceImpl;
 import by.overone.bibliophile.util.validation.exception.ValidateException;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class Main {
 
@@ -70,6 +65,10 @@ public class Main {
         // GET_USER_DETAILS_BY_ID
 //        UserDetailsDTO userDetailsDTO = userService.getUserDetails(24);
 //        System.out.println(userDetailsDTO);
+
+        // GET_ALL_INFO
+        UserAllInfoDTO userGetAllDTO = userService.getUserAllInfo(24);
+        System.out.println(userGetAllDTO);
 
         // DELETE_USER
 //        userService.deleteUser(22);

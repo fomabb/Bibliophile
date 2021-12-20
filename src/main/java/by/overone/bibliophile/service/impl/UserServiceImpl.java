@@ -4,10 +4,7 @@ import by.overone.bibliophile.dao.UserDAO;
 import by.overone.bibliophile.dao.exception.DAOException;
 import by.overone.bibliophile.dao.exception.DAONotFoundException;
 import by.overone.bibliophile.dao.impl.UserDAOImpl;
-import by.overone.bibliophile.dto.UserDataDTO;
-import by.overone.bibliophile.dto.UserDetailsDTO;
-import by.overone.bibliophile.dto.UserGetAllDTO;
-import by.overone.bibliophile.dto.UserRegistrationDTO;
+import by.overone.bibliophile.dto.*;
 import by.overone.bibliophile.model.Status;
 import by.overone.bibliophile.model.User;
 import by.overone.bibliophile.service.UserService;
@@ -80,7 +77,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(DigestUtils.md5Hex(userRegistrationDTO.getPassword()));
 
         if (!UserValidate.validateRegistration(userRegistrationDTO)) {
-            throw new ValidateException("not registration");
+            throw new ValidateException("incorrect data entered");
         }
         try {
             user = userDAO.addUser(user);
@@ -103,7 +100,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(long id) throws ServiceException, ServiceNotFoundException {
+    public UserAllInfoDTO getUserAllInfo(long userId) {
+        UserAllInfoDTO userAllInfoDTO = userDAO.getInfoUsers(userId);
+        return userAllInfoDTO;
+    }
+
+
+    @Override
+    public void deleteUser(long id) {
     }
 }
 

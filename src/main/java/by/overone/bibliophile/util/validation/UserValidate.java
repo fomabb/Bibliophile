@@ -8,7 +8,7 @@ public class UserValidate {
     private final static String LOGIN_REGEX = "^[\\w]{4,12}$";
     private final static String EMAIL_REGEX = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,6}$";
     private final static String PASSWORD_REGEX = "[a-zA-Z0-9]{2,16}";
-    private final static String PHONE_REGEX = "^(\\+375|80)(17|29|33|44)(\\d){7}$";
+    private final static String PHONE_REGEX = "^(\\+375|29)(17|29|33|44)(\\d){7}$";
     private final static String NAME_REGEX = "^[a-zA-Z]{2,30}$";
     private final static String ADDRESS_REGEX = "^[\\w]{5,50}$";
 
