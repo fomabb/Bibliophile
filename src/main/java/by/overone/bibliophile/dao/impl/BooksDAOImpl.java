@@ -64,11 +64,11 @@ public class BooksDAOImpl implements BookDAO {
     }
 
     @Override
-    public Books getBooksById(long bookId) throws DAOException, DAONotFoundException {
+    public Books getBooksById(long id) throws DAOException, DAONotFoundException {
         Books books = new Books();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BOOKS_BY_ID_SQL);
-            preparedStatement.setLong(1, bookId);
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 books.setIdBook(resultSet.getLong(BooksConstant.ID));

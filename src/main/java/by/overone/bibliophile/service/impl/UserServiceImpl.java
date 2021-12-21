@@ -52,10 +52,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserGetAllDTO getUserById(long id) throws ServiceException, ServiceNotFoundException {
+    public UserGetAllDTO getUserById(long bookId) throws ServiceException, ServiceNotFoundException {
         UserGetAllDTO userGetAllDTO = new UserGetAllDTO();
         try {
-            User user = userDAO.getUserById(id);
+            User user = userDAO.getUserById(bookId);
             userGetAllDTO.setId(user.getId());
             userGetAllDTO.setLogin(user.getLogin());
             userGetAllDTO.setEmail(user.getEmail());
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         } catch (DAOException e) {
             throw new ServiceException("not connection");
         } catch (DAONotFoundException e) {
-            throw new ServiceNotFoundException("User with id " + id + " not found", e);
+            throw new ServiceNotFoundException("User with id " + bookId + " not found", e);
         }
         return userGetAllDTO;
     }
@@ -101,13 +101,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserAllInfoDTO getUserAllInfo(long userId) {
-        UserAllInfoDTO userAllInfoDTO = userDAO.getInfoUsers(userId);
-        return userAllInfoDTO;
+        return userDAO.getInfoUsers(userId);
     }
 
 
     @Override
-    public void deleteUser(long id) {
+    public void deleteUser(long id) throws ServiceException, ServiceNotFoundException {
+        getUserById(id);
+        try {
+            userDAO.deleteUser(id);
+        } catch (DAONotFoundException | DAOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

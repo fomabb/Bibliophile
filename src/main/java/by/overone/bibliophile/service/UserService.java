@@ -23,5 +23,5 @@ public interface UserService {
 
     UserAllInfoDTO getUserAllInfo(long userId);
 
-    void deleteUser(long id);
+    void deleteUser(long id) throws ServiceException, ServiceNotFoundException;
 }

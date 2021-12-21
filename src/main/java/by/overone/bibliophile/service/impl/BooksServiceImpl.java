@@ -32,7 +32,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
-    public Books getBooksById(long booksId) throws ServiceException, ServiceNotFoundException {
+    public BookDataDTO getBooksById(long booksId) throws ServiceException, ServiceNotFoundException {
         BookDataDTO bookDataDTO = new BookDataDTO();
         try {
             Books books = bookDAO.getBooksById(booksId);

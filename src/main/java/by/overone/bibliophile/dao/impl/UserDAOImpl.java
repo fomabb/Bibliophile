@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
     private final static String UPDATE_USER_STATUS_SQL = "UPDATE user SET status =(?) WHERE id=(?)";
     private final static String ADD_USER_DETAILS_SQL = "UPDATE user_details SET user_details_name=?, " +
             "user_detail_surname=?, user_detail_address=?, user_detail_phone=? WHERE users_user_id=?";
-    private final static String DELETE_USER_SQL = "UPDATE users SET status=? WHERE user_id=?";
+    private final static String DELETE_USER_SQL = "UPDATE users SET user_status=? WHERE user_id=?";
     private final static String GET_ALL_BOOKS_SQL = "SELECT * FROM books WHERE ";
 
     String url = "jdbc:mysql://localhost:3306/bibliophile";
@@ -245,7 +245,6 @@ public class UserDAOImpl implements UserDAO {
         return userAllInfoDTO;
     }
 
-
     @Override
     public boolean deleteUser(long id) throws DAONotFoundException {
         try {
@@ -255,6 +254,12 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DAONotFoundException("Deletion was not successful", e);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
