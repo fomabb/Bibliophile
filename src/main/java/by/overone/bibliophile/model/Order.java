@@ -11,6 +11,5 @@ public class Order {
     private long id;
     private String title;
     private long customersID;
-    private long employeeID;
-    private long[] books;
+    private long[] booksCount;
 }

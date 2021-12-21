@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends UserDataDTO {
+public class User {
     private long id;
     private String login;
     private String password;

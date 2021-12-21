@@ -13,4 +13,5 @@ public class Books {
     private Genre genreBook;
     private String author;
     private long price;
+    private Status status;
 }
