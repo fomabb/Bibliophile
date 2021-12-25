@@ -17,15 +17,15 @@ public interface UserDAO {
 
     List<User> getAllUser() throws DAOException, DAONotFoundException;
 
-    List<User> getUsersByStatus(Status status) throws DAOException;
-
-    User getUserById(long id) throws DAONotFoundException, DAOException;
-
-    User addUser(User user) throws DAOException;
-
-    UserDetailsDTO getUserDetails(long userId) throws DAOException;
-
-    UserAllInfoDTO getInfoUsers(long userId);
-
-    boolean deleteUser(long id) throws DAONotFoundException, DAOException;
+//    List<User> getUsersByStatus(Status status) throws DAOException;
+//
+//    User getUserById(long id) throws DAONotFoundException, DAOException;
+//
+//    User addUser(User user) throws DAOException;
+//
+//    UserDetailsDTO getUserDetails(long userId) throws DAOException;
+//
+//    UserAllInfoDTO getInfoUsers(long userId);
+//
+//    boolean deleteUser(long id) throws DAONotFoundException, DAOException;
 }
